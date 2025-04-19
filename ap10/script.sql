@@ -1,11 +1,11 @@
-DO $$
-BEGIN
-    RAISE NOTICE '%', 1 / 0;
-EXCEPTION
-    WHEN division_by_zero THEN
-        RAISE NOTICE 'Não divida por zero';
-END;
-$$
+-- DO $$
+-- BEGIN
+--     RAISE NOTICE '%', 1 / 0;
+-- EXCEPTION
+--     WHEN division_by_zero THEN
+--         RAISE NOTICE 'Não divida por zero';
+-- END;
+-- $$
 
 
 -- DO $$
