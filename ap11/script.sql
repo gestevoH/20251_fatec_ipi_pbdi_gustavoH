@@ -1,13 +1,128 @@
 -------------------------------------------- RODAR OS CODIGOS DA ORDEM DE BAIXO PARA CIMA --------------------------------------------
 
+-- DO $$
+-- DECLARE
+--     resultado VARCHAR(500);
+--     troco INT := 43;
+-- BEGIN
+--     CALL sp_obter_notas_para_compor_o_troco (resultado, troco);
+--     RAISE NOTICE '%', resultado;
+-- END;
+-- $$
 
+-- CREATE OR REPLACE PROCEDURE sp_obter_notas_para_compor_o_troco (OUT resultado
+-- VARCHAR(500), IN troco INT)
+-- LANGUAGE plpgsql
+-- AS $$
+-- DECLARE
+--     notas200 INT := 0;
+--     notas100 INT := 0;
+--     notas50 INT := 0;
+--     notas20 INT := 0;
+--     notas10 INT := 0;
+--     notas5 INT := 0;
+--     notas2 INT := 0;
+--     moedas1 INT := 0;
+-- BEGIN
+--     notas200 := troco / 200;
+--     notas100 := troco % 200 / 100;
+--     notas50 := troco % 200 % 100 / 50;
+--     notas20 := troco % 200 % 100 % 50 / 20;
+--     notas10 := troco % 200 % 100 % 50 % 20 / 10;
+--     notas5 := troco % 200 % 100 % 50 % 20 % 10 / 5;
+--     notas2 := troco % 200 % 100 % 50 % 20 % 10 % 5 / 2;
+--     moedas1 := troco % 200 % 100 % 50 % 20 % 10 % 5 % 2;
+-- resultado := concat (
+-- -- E é de escape. Para que \n tenha sentido
+-- -- || é um operador de concatenação
+--     'Notas de 200: ',
+--     notas200 || E'\n',
+--     'Notas de 100: ',
+--     notas100 || E'\n',
+--     'Notas de 50: ',
+--     notas50 || E'\n',
+--     'Notas de 20: ',
+--     notas20 || E'\n',
+--     'Notas de 10: ',
+--     notas10 || E'\n',
+--     'Notas de 5: ',
+--     notas5 || E'\n',
+--     'Notas de 2: ',
+--     notas2 || E'\n',
+--     'Moedas de 1: ',
+--     moedas1 || E'\n'
+-- );
+-- END;
+-- $$
+
+
+-- DO $$
+-- DECLARE
+--     v_troco INT;
+--     v_valor_total INT;
+--     v_valor_a_pagar INT := 100;
+--     v_cod_pedido INT := 7;
+-- BEGIN
+--     CALL sp_calcular_valor_de_um_pedido(v_cod_pedido, v_valor_total);   --aq valor total esta em modo out
+--     CALL sp_calcular_troco(v_troco, v_valor_a_pagar, v_valor_total);    --aq a variavel valor total esta em modo in
+--     RAISE NOTICE 'A conta foi de R$% e você pagou R$%. Troco: R$%', v_valor_total, v_valor_a_pagar, v_troco;
+-- END;
+-- $$
+
+-- CREATE OR REPLACE PROCEDURE sp_calcular_troco(OUT p_troco INT, IN p_valor_a_pagar INT, IN p_valor_total INT)
+-- LANGUAGE plpgsql
+-- AS $$
+-- BEGIN
+--     p_troco := p_valor_a_pagar - p_valor_total;
+-- END;
+-- $$
+
+
+-- DO $$
+-- DECLARE
+--     v_cod_pedido INT := 1;
+-- BEGIN
+--     CALL sp_fechar_pedido(200, v_cod_pedido);
+-- END;
+-- $$
+
+-- SELECT * FROM tb_pedido;
+
+-- CREATE OR REPLACE PROCEDURE sp_fechar_pedido(IN p_valor_a_pagar INT, IN p_cod_pedido INT) 
+-- LANGUAGE plpgsql
+-- AS $$
+-- DECLARE
+--     v_valor_total INT;
+-- BEGIN
+--     CALL sp_calcular_valor_de_um_pedido(p_cod_pedido, v_valor_total);
+--     IF p_valor_a_pagar < v_valor_total THEN
+--         RAISE NOTICE 'R$: % insuficiente para pagar a conta de R$ %', p_valor_a_pagar, v_valor_total;
+--     ELSE
+--         UPDATE tb_pedido p SET
+--         data_modificacao = CURRENT_TIMESTAMP,
+--         status = 'Fechado'
+--         WHERE p.cod_pedido = p_cod_pedido;
+--     END IF; 
+-- END;
+-- $$
+
+
+-- DO $$
+-- DECLARE
+--     v_valor_total INT;
+--     v_cod_pedido INT := 1;
+-- BEGIN
+--     CALL sp_calcular_valor_de_um_pedido(1, v_valor_total);
+--     RAISE NOTICE 'Total do Pedido %, R$: %', v_cod_pedido, v_valor_total;
+-- END;
+-- $$
 
 -- CREATE OR REPLACE PROCEDURE sp_calcular_valor_de_um_pedido(IN p_cod_pedido INT, OUT p_valor_total INT)
 -- LANGUAGE plpgsql
 -- AS $$
 -- BEGIN
 --     SELECT SUM(i.valor) FROM tb_pedido p
---     INNER JOIN tb_item_pedido ip
+--     INNER JOIN tb_item_pedido ip               -- para pegar o valor de cada pedido
 --     ON p.cod_pedido = ip.cod_pedido
 --     INNER JOIN tb_item i
 --     ON ip.cod_item = i.cod_item
