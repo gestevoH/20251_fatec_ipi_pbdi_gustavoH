@@ -1,6 +1,6 @@
--- UPDATE E DELETE com cursores
--- remover tuplas em que video_count é desconhecido
--- exibir as tuplas remanescentes de baixo para cima
+-- -- UPDATE E DELETE com cursores
+-- -- remover tuplas em que video_count é desconhecido
+-- -- exibir as tuplas remanescentes de baixo para cima
 -- SELECT * FROM tb_top_youtubers
 -- WHERE video_count IS NULL;
 -- DO $$
